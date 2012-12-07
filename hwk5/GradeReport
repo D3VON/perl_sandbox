@@ -1,0 +1,108 @@
+#!/usr/bin/perl
+#Program Name: GradeReport
+#Programmer: Devon McBride
+#Homework #: 5 
+#Course Num: CIS167p Perl Programming
+#Instructor: Prof. Abbas Moghtanei
+#Last modified: 7/18/2003
+###################################################################
+#This program: reads a file with pre-formatted data containing
+#names and grades of students.  Grades are space delimited.  Objects
+#are used.  Lines of data are parsed to seperate out names, and
+#grades.  Output goes to the screen in a nicely formatted manner.
+###################################################################
+
+package grades;
+
+sub getGrades
+{
+   my $class = shift;
+   my $self = {};
+   %$self = @_;  
+   bless($self);
+}
+
+sub calcGrades
+{
+   my $self = shift;
+   $total = 0;
+   $total = ($self->{H1} + $self->{H2} + $self->{H3} + $self->{H4} +
+             $self->{H5} + $self->{Q1} + $self->{Q2} + $self->{FL});
+   int($total/3);
+}
+
+sub reportGrades
+{
+   my $self = shift;
+   $mark = shift;
+   if    ($mark >90) { $letter='A'; }
+   elsif ($mark >80) { $letter='B'; }
+   elsif ($mark >70) { $letter='C'; }
+   elsif ($mark >60) { $letter='D'; }
+   else { $letter='F'; }
+}
+
+sub getNames
+{
+   my $self = shift;
+               #  $names = qq($self->{LN} $self->{FN});
+   $last  = $self->{LN};
+   $first = $self->{FN};
+
+   return($last, " ", $first);
+
+   
+
+               # return("$self->{LN} $self->{FN}"); 
+
+}
+
+
+
+package main;
+
+open(FH, "/pub/cis/amoghtan/cis167p/datafile")
+   || die("You've got a problem!  The data file wasn't found.");
+
+print "\n\n          Student       Ave  Grade \n";
+print "    ------------------  ---  ----- \n";
+while(<FH>)
+{
+   @line = split( / +/, $_ );
+   $elements = getGrades grades(LN=>$line[0], FN=>$line[1], H1=>$line[2], 
+                                H2=>$line[3], H3=>$line[4], H4=>$line[5],
+			                    H5=>$line[6], Q1=>$line[7], Q2=>$line[8],
+			                    FL=>$line[9]);
+   $ave  = $elements->calcGrades;
+   $ltr  = $elements->reportGrades($ave);
+   $name = $elements->getNames;
+
+   printf ("    %-18s  %3d    %s  \n", $name, $ave, $ltr);
+}
+close(FH);
+
+__END__
+
+###########################################################
+                      OUTPUT
+###########################################################
+
+/students/dmcbri01/perl/hwk5> perl GradeReport
+
+
+          Student       Ave  Grade 
+    ------------------  ---  ----- 
+     Glen,David          85    B  
+     Jackson,Maria       66    D  
+     Nelson,John         93    A  
+     Mendossa,Alex       95    A  
+     Heffner,Cathy       86    B  
+     Bolanes,Sophia      78    C  
+     Davidson,Boris      95    A  
+     Madison,Sarah       90    B  
+     Lin,Steve           80    C 
+     Baltazar,Barbara    93    A  
+     Sanchez,Philip      54    F  
+     Maloney,Susan       84    B  
+     Chang,Alfonso       89    B  
+     Casidy,Rebecca      81    B  

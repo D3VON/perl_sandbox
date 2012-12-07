@@ -1,0 +1,17 @@
+#!/usr/bin/perl -w
+
+opendir(DH, "/students/dmcbri01/.TrashCan") ||
+    die("You've got a problem: cannot find TrashCan file");
+
+@trashfiles = readdir(DH);
+shift(@trashfiles);  
+
+for($x=1; $x<@trashfiles; $x++)
+{
+   our $realname = $trashfiles[$x];
+   $realname =~ s#\^\^#\/#g;
+   $len = length($realname)-23;
+   $len=0 if $len<0;               #if($len<0){$len=0;}
+   $tempname = substr((substr($realname, $len)), 0, 20);
+   printf("%4i) ...%s\n", $x, $tempname);
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/perl 
+
+#moves a file to the .TrashCan dir in my home dir.
+
+$homedir = (getpwduid($<))[7];
+#print $homedir, "\n";  #this just tests $homedir if need be.
+
+$trashdir = $homedir . "/.TrashCan";
+print $trashdir;

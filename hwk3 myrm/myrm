@@ -1,0 +1,103 @@
+#!/usr/bin/perl -w
+#
+#Program Name: myrm
+#Programmer: Devon McBride
+#Homework #: 3 
+#Course Num: CIS167p Perl Programming
+#Last modified: 7/6/2003
+#
+####################################################################
+# This program 'removes' files entered as arguements.
+# First, it compacts them.  Then it renames them by putting
+# a facsimile of each file names path and name into the new
+# file name: "/home/student/abc" becomes ")(home)(student)(abc". 
+# Then the program moves the renamed file(s) to a directory
+# named ".TrashCan"
+####################################################################
+
+#################################################################### 
+#########verifies: file exists; it's a normal file; is it empty?
+sub checkfile($)
+{
+   if(!-e $f)   #this check also verifies path, so no need to check that.
+   {
+      print "$f doesn't exist where indicated.\n";
+      return 0;
+   }   
+   if(!-f _)
+   {
+      print "$f isn't a normal file.  It won't be erased.\n";
+      return 0;
+   }
+   if(-s _ <=0)
+   {
+      print "$f doesn't have anything in it.  \n";
+      print "$f has been erased and not saved to .TrashCan.\n";
+      system('rm', $f);
+      return 0;
+   }
+   return 1;
+}
+
+####################################################################
+sub remakeName()    #makes name for saving to .TrashCan later 
+{
+   use Cwd;
+
+   my $base = basename("$f");
+   my $path = dirname($f);
+   if($path =~ /^.$/)
+   {
+      $path = cwd;
+   }
+   our $newname = $path . "/" . $base . ".gz";
+   $_ = $newname;
+   $newname =~ s/\//^^/g;
+}
+
+###################################################################
+sub toTrash($$)    #moves a file to the .TrashCan dir 
+{                  #in home dir with new name-with-path 
+   my $homedir = (getpwuid($<))[7];
+   my $trashdir = $homedir . "/.TrashCan/";
+   my $trashpath = $trashdir . $newname; 
+
+   open(IN, "<$zipped") 
+       or die("Something's wrong with file $zipped so not moved.\n"); 
+
+   open(OUT, ">$trashpath") 
+       or die(qq(Cannot save to $trashpath \n));
+
+   while(<IN>)
+   {
+      print OUT "$_";
+   }
+   close(IN); close(OUT);
+}
+
+#####################################################################
+######################MAIN PROGRAM##################################
+
+use File::Basename;
+
+<@ARGV> or die
+	("No files were entered. Usage: "
+	. __FILE__ .
+	" file1 file2 etc...\n");
+
+our ($f, $zipped);
+
+foreach $f (@ARGV)
+{
+   if(checkfile($f))
+   {
+      system('gzip', '-9', $f);
+      $zipped = ($f . ".gz");
+      remakeName();
+      toTrash($zipped, $newname); 
+      unlink($zipped);
+   }
+} 
+
+__END__
+print "$num files were deleted\n";

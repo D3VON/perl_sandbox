@@ -1,0 +1,63 @@
+#!/usr/bin/perl -w
+
+package grade;
+
+sub new
+{
+  my $class=shift;
+  my $ref={ Name=>undef,
+            HW1 =>undef,
+            HW2 =>undef,
+            HW3 =>undef,
+            HW4 =>undef,
+            HW5 =>undef,
+            Q1  =>undef,
+            Q2  =>undef,
+            Final=>undef };
+          
+  %$ref=@_;
+  bless ($ref, $class);
+  return ($ref);
+}
+
+sub getgrades
+{
+  my $self=shift;
+  return( $self->{Name,HW1,HW2,HW3,HW4,HW5,Q1,Q2,Final} );
+}
+
+sub calgrades
+{
+  my $self=shift;
+  $total=($self->{HW1} + $self->{HW2} + $self->{HW3} 
+        + $self->{HW4} + $self->{HW5} + $self->{Q1}
+        + $self->{Q2}  + $self->{Final});
+
+  $average=($total/3);
+  return($average);
+}
+
+sub reportgrades
+{
+  if    ($average>90) { $grades='A'; }
+  elsif ($average>80) { $grades='B'; }
+  elsif ($average>70) { $grades='C'; }
+  elsif ($average>60) { $grades='D'; }
+  else  {$grades='F';}
+  return($grades);
+}
+
+package main;
+
+open(FH, "/pub/cis/amoghtan/cis167p/datafile")
+     || die ("can not open!\n");
+
+while (<FH>)
+{
+  @array=split(' ', $_);
+  $gradereport=new grade(@array);
+ #print $gradereport->getgrades;
+  print $gradereport->calgrades;
+  print $gradereport->reportgrades;
+}
+close(FH);

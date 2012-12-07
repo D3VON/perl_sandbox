@@ -1,0 +1,216 @@
+#!/usr/bin/perl -w 
+#
+#Program Name: rmadmin
+#Programmer: Devon McBride
+#Homework #: 4 
+#Course Num: CIS167p Perl Programming
+#Instructor: Prof. Abbas Moghtanei
+#Last modified: 7/14/2003
+
+
+unshift(@INC, "/pub/cis/amoghtan/cis167p");
+
+require "Colors.pl";
+######use diagnostics;
+
+# MAIN		############################################
+CLS();
+#enable();
+menu();
+while($opt)
+{
+   locate(24,1);
+   if($opt eq 1) 
+    {
+       listbox(); 
+       getfilenames();
+       listfiles();
+    }
+   if($opt eq 2) 
+    { 
+       LOCATE(15,4); print "Restoring is hard!"; 
+       restorefile();
+    }
+   if($opt eq 3) 
+    {
+       LOCATE(15,4); print "Emptying is hard!";  
+    }
+   if($opt eq 4) 
+    { CLS(); last; }
+   if($opt =~ /\D*/) 
+    {
+       LOCATE(15,4); print "Please make a selection"; 
+       LOCATE(16,4); print "from the rmadmin menu.";
+    }
+   LOCATE(12,15); print " "x8;
+   LOCATE(12,15); chomp($opt=<>); 
+   clearmessages();
+}
+RESTORE(); 
+
+sub menu	############################################
+{
+   setAttr(BOLD);
+   setForeground(GREEN);
+   BOX(2,2,11,33);           #   I have to do this to get the 
+   locate(2,3);  print " \n";#<--in a box to be in the right place
+   locate(2,3);  print "         rmadmin\n";
+   locate(3,3);  print "           menu\n";
+   locate(4,3);  print "----------------------------\n";
+   locate(5,3);  print " 1) List Files\n";
+   locate(6,3);  print " 2) Restore Files\n";
+   locate(7,3);  print " 3) Empty Trash Can\n";
+   locate(8,3);  print " 4) Quit\n";
+   LOCATE(12,4); print "Selection: ";
+   LOCATE(12,15); chomp($opt=<>); 
+}
+
+sub listbox	############################################
+{
+   setAttr(BOLD);
+   setForeground(GREEN);
+   BOX(2,33,23,79);
+   RESTORE();
+}
+
+sub getfilenames############################################
+{
+   our @templist;
+   opendir(DH, "/students/dmcbri01/.TrashCan")
+        || die("You've got a problem: cannot find TrashCan");
+   @trashfiles = readdir(DH);
+   shift(@trashfiles);  
+   for($x=0; $x<@trashfiles; $x++)
+   {
+      our $realname = $trashfiles[$x];
+      $realname =~ s#\^\^#\/#g;
+      $len=length($realname)-37;
+      $len=0if $len<0;
+      $tempname = substr($realname, $len);
+      $_ = $tempname;
+      $tempname = $` if /.gz$/;     #This is pretty cool.
+      $templist[$x] = sprintf("%3i) ...%s\n", $x, $tempname);
+   }
+}
+
+sub listfiles	############################################
+{
+   my $ans="n";
+   my $row = 3;
+   my $count=1;
+   my $boxmax=21; 
+   my $arraymax = @templist;
+
+   while($ans eq "p" || "n")
+   {
+      if($ans eq "n")
+      { 
+	 if($count>=$arraymax)
+	 {
+            LOCATE(15,4); print "End of file list";  
+         }
+	 else
+	 {
+            while($row<=$boxmax)
+	    {
+	       if($count<$arraymax)
+	       {                 
+                  locate($row,35); print " \n";#<--this is silly, but it works
+                  locate($row,35); print $templist[$count];
+                  $count++;
+	          $row++;
+	       }
+	       else
+	       {
+                  locate(15,4); print " no more in list";
+               }
+            }
+         }
+      }
+      elsif($ans eq "p")
+      {
+         $row = 3;
+         if($row>$boxmax && $row>$boxmax*2)
+         {
+	    $count=1;
+	    while($row<=$boxmax)
+            {
+               locate($row,35); print " \n";#<--this is silly, but it works
+               locate($row,35); print $templist[$count];
+	       $count++;
+               $row++;
+            }
+	 }
+	 else
+	 {
+	    $row-=$boxmax;
+	    while($row<$boxmax)
+            {
+	       if($count<$arraymax)
+	       {                 
+                  locate($row,35); print " \n";#<--this is silly, but it works
+                  locate($row,35); print $templist[$count];
+                  $count++;
+	          $row++;
+	       }
+	       else
+	       {
+                  locate(15,4); print " no more in list";
+               }
+            }
+
+	 }
+      }
+      LOCATE(13,4); print "p)revious,n)ext,q)uit: ";
+      locate(13,27); chomp($ans=(<>));
+      locate(13,27); print "   "; #clears the cursor
+      locate(13,27); print "   "; #clears the cursor
+      if($ans eq "q")
+      {
+         LOCATE(15,4); print " "x17;  
+         clearmessages();
+	 last;
+      }
+   }
+}
+
+sub clearlistbox ###########################################
+{
+   for($c=1, $c<19, $c++)
+   {
+      locate($c+2, 35); print " "x42;
+   }
+}
+
+sub clearmessages ##########################################
+{
+   for($m=1, $m<5, $m++)
+   {
+      LOCATE($m+12,2); print " "x30;
+   }
+}
+
+sub restorefile#############################################
+{
+   LOCATE (14,3); print "Select a File Number: ";
+   LOCATE (14,22); chomp($del=<>);
+   @deletes = split(',', $del);
+   foreach $d (@deletes)
+   {
+      my $homedir = (getpwuid($<))[7];
+      my $trashdir = $homedir . "/.TrashCan/";
+
+      @trashfile=`ls ~/.TrashCan`;
+
+      $filemove=$trashfile[$d-1];
+      chomp($filemove);
+      $trashfile[$d-1]=$trashdir."/$trashfile[$d-1]";
+
+      qx (gunzip ~/.TrashCan/$filemove);
+      $newfilemove=$filemove;
+      $newfilemove = ~tr#\^\^#/#;
+      qx (mv ~/.TrashCan/$filemove $newfilemove\n);
+   }
+}
+
+__END__

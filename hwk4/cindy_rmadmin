@@ -1,0 +1,136 @@
+#!/usr/bin/perl -w
+sub clearbox##########################################
+{ $spaces=' 'x43;
+  for ($locate=5; $locate<46; $locate++)
+  {
+    LOCATE ($locate,33);
+    print $spaces;
+}
+}
+sub selectloc##########################################
+{
+  LOCATE(48,9); print "Select: ";
+  LOCATE (48,18);  $opt=<>;  chomp ($opt);
+  return $opt;
+}
+sub list_file##########################################
+{
+    #setForeground(RED);
+   BOX (2,31,46,78);
+   LOCATE(4,50);
+   print "LIST FILES\n";
+   open (DH, "/.TrashCan");
+   @mydir=`ls ~/.TrashCan`;
+   $line=0;
+   $locate=5;
+   foreach $_ (@mydir)
+   {
+       locate ($locate, 33);
+       $locate+=2;
+       $line++;
+       $_=~tr#@#/#;
+       $_=~s/\.gz$//;
+       if ($line < 10)
+       {
+          $line=" " . $line;
+      }
+     print "$line" . "  $_\n";
+     if ($line%18==0)
+     {
+         LOCATE(49,18);
+         print "Continue (Y/N)";
+         $ans=<>;
+         chomp ($ans);
+         if ($ans =~ /y/i)
+        {
+            &clearbox;
+            LOCATE(6,34);
+            $locate=5;
+        }
+        if ($ans =~ /n/i)
+        {
+            last;
+        }
+     }
+  }
+   close (DH);
+}
+sub restore_file##########################################
+{
+   LOCATE (56,9); print "Select File Number: ";
+   $input=<>;
+   chomp ($input);
+   @input=split(',', $input);
+   foreach $input (@input)
+   {
+   $trashdir=$ENV{HOME} . "/.TrashCan/";
+   @trashfile=`ls ~/.TrashCan`;
+    print "@trashfile";
+   $filemove=$trashfile[$input-1];
+   chomp ($filemove);
+   $trashfile[$input-1]=$trashdir."/$trashfile[$input-1]";
+#   print "$filemove, $filenewmove\n";
+  qx (cp ~/.TrashCan/$filemove ~/.TrashCan/$filemove.bak);
+#   $filemove.bak=~s/\.bak$//;
+   qx (gunzip ~/.TrashCan/$filemove);
+    $filemove=~s/\.gz$//;
+    $newfilemove=$filemove;
+   $newfilemove = ~tr#\@#/#;
+    qx (mv ~/.TrashCan/$filemove $newfilemove\n);
+   qx(mv ~/.TrashCan/$filemove.gz.bak ~/.TrashCan/$filemove.gz\n);
+   }
+}
+##########################################MAIN PROGRAM
+unshift (@INC, "/pub/cis/amoghtan/cis167p");
+require "Colors.pl";
+CLS();
+setAttr(BOLD);
+setForeground(BLACK);
+BOX(2,2,16,30);
+LOCATE(4,12);
+print "rmadmin Menu";
+LOCATE(6,4);
+print "1).  List File";
+LOCATE(8,4);
+print "2).  Restore File";
+LOCATE(10,4);
+print "3).  Empty Trash Can";
+LOCATE(12,4);
+print "4).  Quit";
+while (1)
+{
+     selectloc();
+     unless($opt =~ m/^\d/)
+     {
+         print "please select one from above menu.\n";
+         LOCATE (48,18);  print"                ";
+     }
+     elsif ($opt==1)
+     {
+         list_file();
+     }
+     elsif ($opt==2)
+     {
+         restore_file();
+     }
+     elsif ($opt==3)
+     {
+         $trashdir=$ENV{HOME} . "/.TrashCan/";
+         @trashfile=`ls ~/.TrashCan`;
+         foreach(@trashfile)
+         {
+             qx(rm $_);
+         }
+     }
+     elsif ($opt==4)
+     {
+         RESTORE;
+         CLS();
+         EXIT(0);
+     }
+     else
+     {
+         print "Please select one from above menu.\n";
+         LOCATE (48,18);  print"                ";
+     }
+} 

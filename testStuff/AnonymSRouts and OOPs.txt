@@ -1,0 +1,62 @@
+###############################################################
+#################### anonymSubRoutTest ########################
+###############################################################
+
+#!/usr/bin/perl -w
+
+$x = sub
+{
+   return($x_[0]*2);
+}
+print &$x(6);  
+
+/students/dmcbri01/perl/testStuff> perl anonymSubRoutTest
+syntax error at anonymSubRoutTest line 7, near "print"
+Execution of anonymSubRoutTest aborted due to compilation errors.
+
+###############################################################
+#################### pointerTest2 #############################
+###############################################################
+
+1 #!/usr/bin/perl -w
+2
+3 $c = ['RED', 'GREEN', 'BLUE']
+4
+5 print $c;                           #, "...and...", $c->[0], "\n";
+                                                      
+/students/dmcbri01/perl/testStuff> perl pointerTest2
+syntax error at pointerTest2 line 5, near "print"
+Execution of pointerTest2 aborted due to compilation errors.
+
+###############################################################
+#################### pointerTest1 #############################
+###############################################################
+
+#!/usr/bin/perl -w
+
+@colors = ('RED', 'GREEN', 'BLUE');
+$c = \ @colors;
+
+print $c, "\n";
+print $c->[1], "\n";
+
+/students/dmcbri01/perl/testStuff> perl pointerTest1                
+ARRAY(0x4002a094)
+GREEN
+
+###############################################################
+#################### anonSubRtFromNormal ######################
+###############################################################
+
+#!/usr/bin/perl -w
+
+sub mult_by_two($)
+{
+   return($_[0]*2);
+}
+
+$x = \&mult_by_two;
+print &$x(6), "\n"; 
+
+/students/dmcbri01/perl/testStuff> perl anonSubRtFromNormal
+12

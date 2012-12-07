@@ -1,0 +1,7 @@
+Count Arguements
+
+#!/usr/bin/perl 
+
+$num = @ARGV;
+
+print $num, "\n";

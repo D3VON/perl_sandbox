@@ -1,0 +1,39 @@
+#! /usr/bin/perl
+
+###################@n = (1, 9, 11, 22, 45);
+###################$meg = 44;
+###################$tkt = 'A';
+
+sub display
+{
+ print "        Super Lotto\n";
+ print `date`;
+
+print "\n";
+printf "Tkt  First Five Numbers   MEGA \n";
+printf "---  ------------------   ---- \n";
+printf (" %s   %02d  %02d  %02d  %02d  %02d    %02d \n", 
+       $tkt, $n[0], $n[1], $n[2], $n[3], $n[4], $meg );
+}
+
+display;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+
+$i = shift;
+
+while($i > 0)
+{
+   our $f = "/students/dmcbri01/perl/trashtest/junk$i";
+   open(FH, ">$f");
+   print FH "asdfasdfasdf\nasdfasdfasdf\nasdfasdfasdf\n";
+   close(FH);
+   $i--;
+
+   do perl /students/dmcbri01/perl/hwk3/myrm $f;
+}
+__END__
+
+I tried:
+
+do "perl /students/dmcbri01/perl/hwk3/myrm $f";
+do '/students/dmcbri01/perl/hwk3/myrm $f';
+do "/students/dmcbri01/perl/hwk3/myrm $f";
+do /students/dmcbri01/perl/hwk3/myrm $f;
+do "/students/dmcbri01/perl/hwk3/myrm" $f;
+do (/students/dmcbri01/perl/hwk3/myrm) $f;
+do "/students/dmcbri01/perl/hwk3/myrm"($f);  

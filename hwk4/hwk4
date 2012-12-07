@@ -1,0 +1,59 @@
+#!/usr/bin/perl -w
+#
+#Program Name: rmadmin 
+#Programmer: Devon McBride
+#Homework #: 4
+#Course Num: CIS167p Perl Programming
+#Last modified: 7/13/2003
+#
+####################################################################
+# 
+####################################################################
+####################################################################
+sub mkoldname($)    #changes name back to original path-with-name 
+{
+   our $oldname =~ s/^^/\//g;
+}
+###################################################################
+sub toOldName($$)    #moves a file to the .TrashCan dir 
+{                  #in home dir with new name-with-path 
+   open(IN, "<$trashf") 
+       or die("Something's wrong with file $f so not moved.\n"); 
+   open(OUT, ">$f") 
+       or die(qq(Cannot save to $oldname \n));
+   while(<IN>)
+   {
+      print OUT "$_";
+   }
+   close(IN); close(OUT);
+}
+#####################################################################
+######################MAIN PROGRAM##################################
+<@ARGV> or die
+	("No files were entered. Usage: "
+	. __FILE__ .
+	" file1 file2 etc...\n");
+#our ($unzipped);
+foreach $f (@ARGV)
+{
+#  if(checkfile($f))
+#  {
+      system('gunzip', $f);
+      $trashf = $f;     
+      $f =~ s/\.gz$//;
+      toOldName($trashf, $f);
+      mkoldname($f);
+      print $oldname;
+#     toOldName($zipped, $newname); 
+#     unlink($zipped);
+#  }
+} 
+__END__
+
+use this to truncate paths that are too long:
+$line =~ s/\s\s/ /g if $line =~ /.{80,}/;
+this was example from class: if line is over 80 char, then switch two spaces
+to one space.  --but I'll have to keep the *last* number of characters.
+maybe count them all, s/ 1st(all - 40) / nothing / where 40 is the max
+amount.  so you're keeping the last 40 characters in how it renders on the
+screen.   

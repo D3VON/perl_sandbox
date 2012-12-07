@@ -1,0 +1,152 @@
+#!/usr/bin/perl -w
+
+sub clearbox
+{ $spaces=' 'x43;
+  for ($locate=5; $locate<46; $locate++)
+  {
+    LOCATE ($locate,33);
+    print $spaces;
+}
+}
+
+sub selectloc
+{ 
+  LOCATE(48,9); print "Select: ";
+  LOCATE (48,18);  $opt=<>;  chomp ($opt);
+  return $opt;
+}
+
+sub list_file
+{  
+  #setForeground(RED);
+   BOX (2,31,46,78);
+   LOCATE(4,50);
+   print "LIST FILES\n";
+
+   open (DH, "/.TrashCan");
+   @mydir=`ls ~/.TrashCan`;
+   $line=0;
+   $locate=5;
+   foreach $_ (@mydir)
+  {
+
+     locate ($locate, 33);
+     $locate+=2;
+     $line++;
+     $_=~tr#@#/#;
+     $_=~s/\.gz$//;
+     if ($line < 10)
+      {
+        $line=" " . $line;
+      }
+      print "$line" . "  $_\n";
+      
+     if ($line%18==0)
+      {
+        LOCATE(49,18);
+        print "Continue (Y/N)";
+         $ans=<>;
+         chomp ($ans);
+
+      if ($ans eq "Y")
+      { &clearbox;  LOCATE(6,34); 
+        $locate=5;
+       }
+      if ($ans eq "N")
+     { last;
+      }
+
+    }
+  }
+ close (DH);
+
+}
+
+
+
+
+
+sub restore_file
+
+{
+
+    
+   LOCATE (56,9); print "Select File Number: ";
+   $input=<>;
+   chomp ($input);
+   @input=split(',', $input);
+   foreach $input (@input)
+
+   {
+
+   $trashdir=$ENV{HOME} . "/.TrashCan/";
+   @trashfile=`ls ~/.TrashCan`;
+   $filemove=$trashfile[$input-1];
+   $trashfile[$input-1]=$trashdir."/$trashfile[$input-1]";
+ 
+   qx (cp $filemove $filenewmove);
+
+   }
+
+}
+
+
+
+
+
+
+unshift (@INC, "/pub/cis/amoghtan/cis167p");
+require "Colors.pl";
+CLS();
+setAttr(BOLD);
+setForeground(GREEN);
+BOX(2,2,16,30);
+LOCATE(4,12);
+print "rmadmin Menu";
+LOCATE(6,4);
+print "1).  List File";
+LOCATE(8,4);
+print "2).  Restore File";
+LOCATE(10,4);
+print "3).  Empty Trash Can";
+LOCATE(12,4);
+print "4).  Quit";
+selectloc();
+
+if ($opt==1)
+  {
+    list_file();
+    selectloc();
+
+}
+
+elsif ($opt==2)
+  {
+    restore_file();
+    selectloc();
+
+  }
+
+elsif ($opt==3)
+
+  {   
+     $trashdir=$ENV{HOME} . "/.TrashCan/";
+@trashfile=`ls ~/.TrashCan`;
+  qx (rm @trashfile); 
+      selectloc();
+}
+ elsif ($opt==4)
+
+{    
+   RESTORE;
+    CLS();
+   EXIT(0);
+
+}
+else
+   {
+     print "Please select one from above menu.\n";
+     selectloc();
+   }
+
+     

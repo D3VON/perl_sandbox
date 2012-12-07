@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+
+$line = "123:woofie#4...:234234:dmcbri01,mtan01,dgrey01,gbailey";
+
+@record = split(":", $line);
+print $record[3];
+
+@students = split(",", $record[3]);
+print $students[3], "\n";

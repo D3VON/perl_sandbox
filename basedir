@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+
+use File::Basename;
+
+$b = basename;
+$d = dirname;
+
+print "$b is the base name, \n $d is the dirname \n";

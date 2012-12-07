@@ -1,0 +1,27 @@
+#!/usr/bin/perl -w
+
+(@ARGV)|| die (" died ");
+
+open(FH, "<$ARGV[0]");
+@file = <FH>;
+@words = ("");
+@chars = ("");
+$wordcount = 0 ;
+$charz = 0;
+foreach $line (@file)
+{
+      @words = split(" ", $line );
+      $wordcount += $#words;
+      foreach $word (@words)
+      {
+         @chars = split(/./, $word)
+      }
+      $charz += $#chars; 
+}
+
+close(FH);
+
+print "$#file is the num of lines\n";
+print "$wordcount is the num of words\n";
+print "$charz is the num of characters\n";
+

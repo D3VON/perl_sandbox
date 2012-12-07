@@ -1,0 +1,74 @@
+#!/usr/bin/perl -w
+
+package grades;
+
+sub getGrades
+{
+   my $class = shift;
+   my $self = {};
+   %$self = @_;
+   bless($self);
+}
+
+sub calcGrades
+{
+   my $self = shift;
+   $total = 0;
+
+   for($x=2, $x<10, $++)
+   {
+      $element="element$x";
+      $total+=$self->{$element};
+   }
+
+   #$total = ($self->{k2} + $self->{k3} + $self->{k4} + $self->{k5} +
+   #          $self->{k6} + $self->{k7} + $self->{k8} + $self->{k9});
+   $num = int($total/3);
+
+   return $num; #I'd rather not have 'return'
+}
+
+sub reportGrades
+{
+   my $self = shift;
+   $num = shift;
+   if    ($num>90) { $letter='A'; }
+   elsif ($num>80) { $letter='B'; }
+   elsif ($num>70) { $letter='C'; }
+   elsif ($num>60) { $letter='D'; }
+   else { $letter='F'; }
+   return $letter;                             #do I need 'return'?
+}
+
+sub getNames
+{
+   my $self = shift;
+   $name = "$self->{element0} $self->{element1}" ;
+   return ( $name );
+}
+
+package main;
+
+open(FH, "/pub/cis/amoghtan/cis167p/datafile")
+   || die("You've got a problem!  The data file wasn't found.");
+
+print "Student's Name            %   Grade \n";
+print "-------------------  --  ----- \n";
+while (<FH>)
+{
+   @arr2 = split( / +/, $_ );
+   $inst = getGrades grades(element0=>$arr2[0], element1=>$arr2[1], element2=>$arr2[2], 
+                            element3=>$arr2[3], element4=>$arr2[4], element5=>$arr2[5],
+			    element6=>$arr2[6], element7=>$arr2[7], element8=>$arr2[8],
+			    element9=>$arr2[9]);
+   $a = $inst->calcGrades;
+   $b = $inst->reportGrades($a);
+   $c = $inst->getNames;
+
+   printf ("%-19s  %2d    %s  \n", $c, $a, $b);
+   print   "-------------------  --  ----- \n";
+}
+close(FH);
+
+
+    

@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+
+use File::Basename(fileparse);
+
+($name,$path) = fileparse("./basedir");
+
+
+--$b = basename(basedir);
+--$d = dirname(basedir);
+
+print "$name is the base name, \n $path is the path of the file \n";

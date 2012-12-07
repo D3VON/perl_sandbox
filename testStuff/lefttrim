@@ -1,0 +1,30 @@
+#!/usr/bin/perl -w 
+
+sub lefttrim      
+{  
+      print $i;
+
+      $i =~
+      s/
+      (^\s*)             #this is register 1, i.e. $1
+      (.*)               #this is register 2, i.e. $2
+      /$2/ex;            #switches (1st register) which is 
+                         #beginning spaces, with (2nd register)
+                         #which is the 1st char encountered
+                         #and all that follows. 
+# e modifier (at the end) means: evaluate replacement side as an expression.
+#     if we didn't have the 'e', it would replace it with ".*", literally.
+# x modifier means: white space in the reg ex. doesn't count, neither do
+#     comments or blank lines, so the we can write the switch stmt clearly.  
+#     ALSO within the parentheses.
+      print $i; #each line in the file has a 'newline' at the end alread.
+                #so no need to add another one here. 
+} 
+########################################MAIN#########################
+
+open(FH, "<@ARGV");
+
+foreach $i (<FH>)
+{
+   lefttrim;
+}

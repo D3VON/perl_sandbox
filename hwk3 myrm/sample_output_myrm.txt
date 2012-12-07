@@ -1,0 +1,69 @@
+/students/dmcbri01/perl/hwk3> ls
+basedir        findDirPath    remakeName     test_pkg_File  zerochars
+dirname        getGivenPath   test1          testdir
+errorcheck     myrm           test2          toTrash
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> perl myrm test1 zerochars testdir                                
+zerochars doesn't have anything in it.  
+zerochars has been erased and not saved to .TrashCan.
+testdir isn't a normal file.  It won't be erased.
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> perl myrm                        
+No files were entered. Usage: myrm file1 file2 etc...
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> perl myrm /students/dmcbri01/inotherdir1
+/students/dmcbri01/inotherdir1 doesn't exist where indicated.
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> perl myrm /students/dmcbri01/perl/hwk2/inotherdir1
+/students/dmcbri01/perl/hwk3> ls
+basedir        errorcheck     getGivenPath   remakeName     test_pkg_File  toTrash
+dirname        findDirPath    myrm           test2          testdir
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> perl myrm test2
+/students/dmcbri01/perl/hwk3> ls
+basedir        errorcheck     getGivenPath   remakeName     testdir
+dirname        findDirPath    myrm           test_pkg_File  toTrash
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> cd ../hwk2
+/students/dmcbri01/perl/hwk2>
+/students/dmcbri01/perl/hwk2>
+/students/dmcbri01/perl/hwk2> ls
+2                SLBackup         SuperLotto       SuperLotto.perl  randy
+/students/dmcbri01/perl/hwk2>
+/students/dmcbri01/perl/hwk2>
+/students/dmcbri01/perl/hwk2> cd ../../.TrashCan
+/students/dmcbri01/.TrashCan>
+/students/dmcbri01/.TrashCan>
+/students/dmcbri01/.TrashCan> ls
+^^students^^dmcbri01^^perl^^hwk2^^inotherdir1.gz
+^^students^^dmcbri01^^perl^^hwk3^^test1.gz
+^^students^^dmcbri01^^perl^^hwk3^^test2.gz
+/students/dmcbri01/.TrashCan> cd ../perl/hwk3
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> ls
+basedir        dirname        findDirPath    myrm           test_pkg_File  toTrash
+bbbb           errorcheck     getGivenPath   remakeName     testdir
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> perl myrm ./bbbb
+/students/dmcbri01/perl/hwk3> ls
+basedir        errorcheck     getGivenPath   remakeName     testdir
+dirname        findDirPath    myrm           test_pkg_File  toTrash
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3>
+/students/dmcbri01/perl/hwk3> cd ../../.TrashCan
+/students/dmcbri01/.TrashCan> ls
+^^students^^dmcbri01^^perl^^hwk2^^inotherdir1.gz
+^^students^^dmcbri01^^perl^^hwk3^^bbbb.gz
+^^students^^dmcbri01^^perl^^hwk3^^test1.gz
+^^students^^dmcbri01^^perl^^hwk3^^test2.gz
+/students/dmcbri01/.TrashCan> 
+
+

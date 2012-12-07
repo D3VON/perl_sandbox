@@ -1,0 +1,33 @@
+#!/usr/bin/perl -w
+
+sub listfiles	############################################
+{
+
+   our @templist;
+
+   opendir(DH, "/students/dmcbri01/.TrashCan")
+        || die("You've got a problem: cannot find TrashCan");
+   @trashfiles = readdir(DH);
+   shift(@trashfiles);  
+
+   for($x=0; $x<@trashfiles; $x++)
+   {
+      our $realname = $trashfiles[$x];
+      $realname =~ s#\^\^#\/#g;
+      $len=length($realname)-37;
+      $len=0if $len<0;
+      $tempname = substr($realname, $len);
+
+      $_ = $tempname;
+      /.gz$/;
+      $tempname = $` if /.gz$/;
+
+      $templist[$x] = sprintf("%3i) ...%s\n", $x, $tempname);
+   }
+}
+listfiles();
+print "\n";
+foreach $x (@templist)
+{
+	print "$x\n";
+}

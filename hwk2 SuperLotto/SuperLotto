@@ -1,0 +1,135 @@
+#! /usr/bin/perl 
+#
+#Programmer: Devon McBride
+#Homework #: 2
+#Course Num: CIS167p Perl Programming
+########################################################
+#This script is named SuperLotto.  It generates 6 random
+#numbers: 5 between 1 and 47, and 1 between 1 and 27 (the
+#'Mega' number).  The user chooses how many times s/he would 
+#like this to be done.  The user may enter the number of times
+#on the command line, or be prompted by the program after it's 
+#started. Sets of random numbers are displayed in groups of 10
+#and they are recorded in a file called 'SLBackup'.  
+
+sub displayHeader#######################################
+{		 #this didn't need to be a subroutine.
+   $header1 = "\n           Super Lotto\n",
+   $header2 = "    ",
+   $header3 = `date`,
+   $header4 = "\n",
+   $header5 = "   Tkt  First Five Numbers   MEGA \n",
+   $header6 = "   ---  ------------------   ---- \n";
+1;
+}
+
+sub displayNumbers######################################
+{
+   $display1 = sprintf ("    %s   %02d  %02d  %02d  %02d  %02d    %02d \n", 
+                          $tkt, $n[0], $n[1], $n[2], $n[3], $n[4], $mega);
+	  # $display1 is for the display and for the backup file. 
+
+   $display2 = sprintf ("   ---  ------------------   ----\n");
+	  # $display2 is just for the display, not for the backup file. 
+
+1;
+}
+
+sub randy###############################################
+{
+   $mega = int(rand(27)+1);	#Here's y'r Mega
+
+   $#nums = 5;			#Trying to 'initialize'
+   $#temp = 48;
+   @temp = (0,0);
+   @nums = (0,0);
+
+   for( $i=0, $i<=47, $i++ )
+   {
+      $temp[$i]=0;		#Fills @temp with zeros
+   }
+   
+   $i=0;
+   while( $i <= 4 )		#Fills @n.
+   {
+      $x = int( rand(47) +1 );
+   
+      if( $temp[$x] == 0 )
+      {
+         $temp[$x] = 1;
+         $nums[$i] = $x;
+         $i++;
+      }
+   }
+   @n = sort( {$a <=> $b} @nums );
+1;
+}
+
+#MAIN PROGRAM###########################################
+
+$loops = $ARGV[0];       #What was entered as an arguement?
+chomp($loops);
+
+if(@ARGV == 0)         #If there was no arguement, ask for a number.
+{
+   print "\nPlease enter the number of tickets you would like: ";
+   $loops = <>;
+   chomp($loops);
+   print "\n";
+
+   if($loops =~ /\D/) #If the arguement wasn't a number, ask for one.
+   {
+      while($loops =~ /\D/)
+      {
+         print "\nNo text, please, just the number of tickets\n";
+         print "that you would like to purchase: ";
+         $loops = <>;
+         chomp($loops);
+	 print "\n";
+      }
+   }
+} 
+elsif($loops =~ /\D/) #If the arguement wasn't a number, ask for one.
+{
+   while($loops =~ /\D/)
+   {
+      print "\nNo text, please, just the number of tickets\n";
+      print "that you would like to purchase: ";
+      $loops = <>;
+      chomp($loops);
+      print "\n";
+   }
+}
+
+open(RECORD, ">>SLBackup");
+print RECORD `date`;
+
+$repeat = 0;
+$letter = 0;
+while($repeat < $loops)
+{
+   if($repeat%10 == 0)
+   {   
+      $letter = 0;
+      displayHeader;
+      print $header1, $header2, $header3, $header4, $header5, $header6;
+   }
+
+   $tkt = chr(65+$letter);
+   randy;
+   displayNumbers;
+   print $display1;
+   print RECORD $display1;
+   print $display2;
+   $repeat++;
+   $letter++;
+
+   if($repeat%10 == 0)
+   {   
+      print "\n\n";  # puts nice space after each group of 10 number sets. 
+   }
+}
+print RECORD "\n";
+close(RECORD);
+1;
+__END__

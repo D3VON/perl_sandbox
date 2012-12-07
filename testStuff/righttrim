@@ -1,0 +1,26 @@
+#!/usr/bin/perl -w 
+
+sub righttrim      
+{  
+      print FNEW $i;
+
+      $i =~
+      s/
+      (\s+$)     
+      (\n)   
+      /$2/ex;    
+
+      print FNEW $i; 
+               
+} 
+########################################MAIN#########################
+
+open(FH, "<@ARGV");
+open(FNEW, ">newtest1");
+
+foreach $i (<FH>)
+{
+   righttrim;
+}
+
+close(FH); close(FNEW);

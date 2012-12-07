@@ -1,0 +1,29 @@
+#! /usr/bin/perl -w
+#I'll be damned if this doesn't work!
+#Takes any amt of arguements from command line
+#Loops the arguements through the foreach loop
+#gives 'die' warning if no arguements -- plus some crap
+#                          that the system generates 
+
+<@ARGV> or die("No CRN #s were entered. Usage: students CRN1 CRN2 ...");
+
+print "This is with my made-up variable to count elements in ARGV\n";
+foreach $i (<@ARGV>)
+{
+   print "$i\n";
+}
+print "\n\n";
+print "This is with the written \$_ to count the elements in ARGV\n"; 
+foreach (<@ARGV>)
+{
+   print "$_ \n";
+}
+
+print "\n\n";
+print "This is with totally phantom, unwritten \$_ and bare print\n";
+foreach (<@ARGV>) 
+{
+   print;
+   print "\n";
+} 
+__END__

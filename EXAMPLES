@@ -1,0 +1,23 @@
+Count Arguements######################################
+
+		#!/usr/bin/perl 
+
+		$num = @ARGV;
+
+		print $num, "\n";
+
+	$ perl count_commandline_args 1 2 3
+	3
+	$
+
+
+
+#Prints Command Line Arguements######################################
+
+		#!/usr/bin/perl 
+
+		print @ARGV, "\n";
+
+	$ perl prints_command_line_arguements 1 2 3
+	123
+	$
